@@ -60,17 +60,15 @@ export default async function ShopPage() {
     variantsNote: p.variantsNote,
   }));
 
-    return (
-    // Suspense is required because ProductsClient uses useSearchParams(),
-    // which needs a client-side boundary.
+  return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex min-h-screen items-center justify-center bg-gray-50">
           <p className="text-gray-500">Loading products…</p>
-                </div>
+        </div>
       }
     >
       <ProductsClient initialProducts={products} initialCategories={allCategories} />
     </Suspense>
-    );
+  );
 }

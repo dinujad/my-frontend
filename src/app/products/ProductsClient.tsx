@@ -30,12 +30,17 @@ interface ProductsClientProps {
   initialCategories: CategoryItem[];
 }
 
-export function ProductsClient({ initialProducts, initialCategories }: ProductsClientProps) {
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams.get("category");
+interface ProductsClientInnerProps extends ProductsClientProps {
+  categoryQueryParam: string | null;
+}
 
+function ProductsClientInner({
+  initialProducts,
+  initialCategories,
+  categoryQueryParam,
+}: ProductsClientInnerProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    categoryParam && categoryParam !== "all" ? [categoryParam] : []
+    categoryQueryParam && categoryQueryParam !== "all" ? [categoryQueryParam] : []
   );
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -541,4 +546,15 @@ export function ProductsClient({ initialProducts, initialCategories }: ProductsC
       </div>
     </main>
   );
+}
+
+function ProductsSearchParamsReader(props: ProductsClientProps) {
+  const searchParams = useSearchParams();
+  return (
+    <ProductsClientInner {...props} categoryQueryParam={searchParams.get("category")} />
+  );
+}
+
+export function ProductsClient(props: ProductsClientProps) {
+  return <ProductsSearchParamsReader {...props} />;
 }
